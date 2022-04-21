@@ -9,6 +9,5 @@ router
   .post(brandCtrl.createBrand)
   .put(brandCtrl.updateBrand)
   .delete(brandCtrl.removeBrand);
-router.get('/search/:value', brandCtrl.searchBrand);
 
 module.exports = router;
