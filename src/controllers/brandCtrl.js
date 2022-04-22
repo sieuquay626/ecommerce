@@ -1,22 +1,19 @@
+const Brand = require('../models/brandModel');
 const { ObjectId } = require('mongodb');
 
 const brandCtrl = {
   getBrands: async (req, res) => {
     try {
-      const { id, keywword = '' } = req.query;
-      if(id){
-        const brands = await Brand.find({
-          id,
-          name: { $in: keywword}
-        });
-        if(brands){
-          return res.status(404).json({});
+      const { id , keyword = ''} = req.query;
+      const find = ObjectId.isValid(id)
+        ? [{ _id: ObjectId(value) }]
+        : [{ name: { $regex:  keyword, $options: 'i' } }];
+      const brands = await Brand.find(
+        {
+          $or: find
         }
-        return res.status(200).json(brands);
-      }else{
-        const brands = await Brand.find();
-        return res.status(200).json(brands);
-      }
+      )
+      return res.status(200).json(brands);
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
